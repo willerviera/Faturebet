@@ -1,21 +1,14 @@
-MIT License
+import { useState } from 'react';
 
-Copyright (c) 2025 willerviera
+export default function MinesGame() { const GRID_SIZE = 5; const NUM_MINES = 5;
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+const generateBoard = () => { let mines = new Set(); while (mines.size < NUM_MINES) { mines.add(Math.floor(Math.random() * GRID_SIZE * GRID_SIZE)); } return Array.from({ length: GRID_SIZE * GRID_SIZE }, (_, i) => ({ id: i, isMine: mines.has(i), revealed: false })); };
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+const [board, setBoard] = useState(generateBoard); const [balance, setBalance] = useState(100); const [betAmount, setBetAmount] = useState(10); const [gameOver, setGameOver] = useState(false);
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+const handleCellClick = (index) => { if (gameOver || board[index].revealed) return; const newBoard = [...board]; newBoard[index].revealed = true; if (newBoard[index].isMine) { setGameOver(true); setBalance(balance - betAmount); } else { setBalance(balance + betAmount / 2); } setBoard(newBoard); };
+
+const resetGame = () => { setBoard(generateBoard()); setGameOver(false); };
+
+return ( <div className="p-4 max-w-md mx-auto text-center"> <h1 className="text-2xl font-bold mb-4">Mines Game</h1> <p className="mb-2">Saldo: ${balance.toFixed(2)}</p> <input type="number" min="1" className="border p-1 mb-2" value={betAmount} onChange={(e) => set
+
